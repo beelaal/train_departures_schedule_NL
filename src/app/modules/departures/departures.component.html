@@ -1,0 +1,53 @@
+<div class="container">
+    <!-- Station Filter Starts here -->
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <label class="header pr-1">Select station to filter the departures</label>
+            <ng-select #select tooltip="Sations" [items]="stations" bindLabel="namen.lang" bindValue="code"
+                (change)="onChangeStations($event)" [searchable]="true" [clearable]="false">
+            </ng-select>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="mb-4">
+                <h4>Departure List</h4>
+            </div>
+            <div *ngIf="tempData.length>0" class="row mt-3">
+                <div class="col-md-6">
+                    <label class="header pr-1">Filter By Train Type</label>
+                    <ng-select #select tooltip="stationTypes" [items]="stationTypes" bindLabel="staionName"
+                        bindValue="staionType" (change)="filterTrainType($event)" [searchable]="true"
+                        [clearable]="false">
+                    </ng-select>
+                </div>
+            </div> 
+                <ngx-datatable #table class='bootstrap' [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                    [rowHeight]="'auto'" [limit]="10" [rows]='departures' [reorderable]="true">
+                    <ngx-datatable-column name="Planned Departure Time" prop="plannedDateTime">
+                        <ng-template ngx-datatable-cell-template let-value="value">
+                            <span> {{value |date: 'dd-MMM-yyyy HH:mm'}} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Direction" prop="direction">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Platform" prop="plannedTrack">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Train Type" prop="trainCategory">
+                        <ng-template ngx-datatable-cell-template let-value="value">
+                            <span> {{value === 'SPR'? 'Sprinter':value === 'IC'? 'Intercity': value}} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable> 
+            <div *ngIf="error" class="error mt-2">Message: {{error?.message}}</div>
+            <div *ngIf="error" class="error mt-2">Code: {{error?.code}}</div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 text-center d-none d-md-block">
+        <div *ngIf="loadingSpinner" class="d-flex justify-content-center">
+            <div *ngIf="loadingSpinner" id="semiTransparenDiv"></div>
+        </div>
+    </div>
+</div>
